@@ -70,12 +70,13 @@ const Index = () => {
   const [thinking, setThinking] = useState(false);
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");
   const [mode, setMode] = useState<Mode>("ai");
+  // Track which cells were just placed for animation
+  const [lastPlaced, setLastPlaced] = useState<number | null>(null);
 
   const result = getWinner(board);
   const isDraw = !result && board.every(Boolean);
   const currentPlayer = isXNext ? "X" : "O";
 
-  // AI move
   useEffect(() => {
     if (mode === "ai" && !isXNext && !result && !isDraw) {
       setThinking(true);
@@ -85,6 +86,7 @@ const Index = () => {
           const next = [...board];
           next[move] = "O";
           setBoard(next);
+          setLastPlaced(move);
           if (getWinner(next)) setScores((s) => ({ ...s, O: s.O + 1 }));
           setIsXNext(true);
         }
@@ -101,14 +103,14 @@ const Index = () => {
     const next = [...board];
     next[i] = currentPlayer;
     setBoard(next);
+    setLastPlaced(i);
 
     const newResult = getWinner(next);
     if (newResult) setScores((s) => ({ ...s, [currentPlayer]: s[currentPlayer as "X" | "O"] + 1 }));
     setIsXNext(!isXNext);
   }, [board, isXNext, result, thinking, mode, currentPlayer]);
 
-  const resetBoard = () => { setBoard(Array(9).fill(null)); setIsXNext(true); setThinking(false); };
-
+  const resetBoard = () => { setBoard(Array(9).fill(null)); setIsXNext(true); setThinking(false); setLastPlaced(null); };
   const changeMode = (m: Mode) => { setMode(m); resetBoard(); setScores({ X: 0, O: 0 }); };
   const changeDifficulty = (d: Difficulty) => { setDifficulty(d); resetBoard(); setScores({ X: 0, O: 0 }); };
 
@@ -127,7 +129,6 @@ const Index = () => {
       <div className="flex flex-col items-center gap-6">
         <h1 className="text-4xl font-black tracking-tight text-foreground">Tic Tac Toe</h1>
 
-        {/* Mode selector */}
         <div className="flex gap-2">
           {([["ai", "🤖 vs AI"], ["local", "👥 2 Players"]] as [Mode, string][]).map(([m, label]) => (
             <button key={m} onClick={() => changeMode(m)}
@@ -137,7 +138,6 @@ const Index = () => {
           ))}
         </div>
 
-        {/* Difficulty selector (AI only) */}
         {mode === "ai" && (
           <div className="flex gap-2">
             {(["easy", "medium", "hard"] as Difficulty[]).map((d) => (
@@ -166,6 +166,7 @@ const Index = () => {
           <div className="grid grid-cols-3 gap-2">
             {board.map((cell, i) => {
               const isWinCell = result?.line.includes(i);
+              const justPlaced = lastPlaced === i;
               return (
                 <button key={i} onClick={() => handleClick(i)}
                   className={`w-24 h-24 rounded-lg text-4xl font-black transition-all duration-150 flex items-center justify-center
@@ -173,8 +174,13 @@ const Index = () => {
                     ${!cell ? "bg-background border-2 border-border" : ""}
                     ${cell === "X" ? "text-primary bg-primary/10 border-2 border-primary/30" : ""}
                     ${cell === "O" ? "text-secondary bg-secondary/10 border-2 border-secondary/30" : ""}
-                    ${isWinCell ? "scale-110 shadow-md" : ""}`}>
-                  {cell}
+                    ${isWinCell ? "animate-win-bounce animate-win-glow" : ""}
+                  `}>
+                  {cell && (
+                    <span key={`${i}-${cell}`} className={justPlaced ? "animate-pop-in inline-block" : "inline-block"}>
+                      {cell}
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -182,7 +188,7 @@ const Index = () => {
         </Card>
 
         {(result || isDraw) && (
-          <Button onClick={resetBoard} size="lg" className="font-bold text-base">Play Again</Button>
+          <Button onClick={resetBoard} size="lg" className="font-bold text-base animate-pop-in">Play Again</Button>
         )}
       </div>
     </div>
