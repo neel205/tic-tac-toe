@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 type Player = "X" | "O" | null;
+type Difficulty = "easy" | "medium" | "hard";
 
 const WINNING_LINES = [
   [0, 1, 2], [3, 4, 5], [6, 7, 8],
@@ -65,11 +66,36 @@ function getBestMove(board: Player[]): number {
   return bestMove;
 }
 
+function getRandomMove(board: Player[]): number {
+  const empty = board.map((c, i) => (c === null ? i : -1)).filter((i) => i !== -1);
+  return empty[Math.floor(Math.random() * empty.length)];
+}
+
+function getAIMove(board: Player[], difficulty: Difficulty): number {
+  const rand = Math.random();
+  if (difficulty === "easy") {
+    // 80% random, 20% optimal
+    return rand < 0.8 ? getRandomMove(board) : getBestMove([...board]);
+  }
+  if (difficulty === "medium") {
+    // 40% random, 60% optimal
+    return rand < 0.4 ? getRandomMove(board) : getBestMove([...board]);
+  }
+  return getBestMove([...board]);
+}
+
+const DIFFICULTY_LABELS: Record<Difficulty, string> = {
+  easy: "🟢 Easy",
+  medium: "🟡 Medium",
+  hard: "🔴 Hard",
+};
+
 const Index = () => {
   const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
   const [isXNext, setIsXNext] = useState(true);
   const [scores, setScores] = useState({ X: 0, O: 0 });
   const [thinking, setThinking] = useState(false);
+  const [difficulty, setDifficulty] = useState<Difficulty>("medium");
 
   const result = getWinner(board);
   const isDraw = !result && board.every(Boolean);
@@ -78,7 +104,7 @@ const Index = () => {
     if (!isXNext && !result && !isDraw) {
       setThinking(true);
       const timer = setTimeout(() => {
-        const move = getBestMove([...board]);
+        const move = getAIMove([...board], difficulty);
         if (move !== -1) {
           const next = [...board];
           next[move] = "O";
@@ -93,7 +119,7 @@ const Index = () => {
       }, 400);
       return () => clearTimeout(timer);
     }
-  }, [isXNext, board, result, isDraw]);
+  }, [isXNext, board, result, isDraw, difficulty]);
 
   const handleClick = useCallback((i: number) => {
     if (board[i] || result || !isXNext || thinking) return;
@@ -114,12 +140,38 @@ const Index = () => {
     setThinking(false);
   };
 
+  const changeDifficulty = (d: Difficulty) => {
+    setDifficulty(d);
+    setBoard(Array(9).fill(null));
+    setIsXNext(true);
+    setThinking(false);
+    setScores({ X: 0, O: 0 });
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="flex flex-col items-center gap-6">
         <h1 className="text-4xl font-black tracking-tight text-foreground">
           Tic Tac Toe
         </h1>
+
+        {/* Difficulty selector */}
+        <div className="flex gap-2">
+          {(["easy", "medium", "hard"] as Difficulty[]).map((d) => (
+            <button
+              key={d}
+              onClick={() => changeDifficulty(d)}
+              className={`
+                px-4 py-2 rounded-lg text-sm font-bold transition-all
+                ${difficulty === d
+                  ? "bg-primary text-primary-foreground shadow-md scale-105"
+                  : "bg-muted text-muted-foreground hover:bg-accent cursor-pointer"}
+              `}
+            >
+              {DIFFICULTY_LABELS[d]}
+            </button>
+          ))}
+        </div>
 
         <div className="flex gap-6 text-lg font-bold">
           <span className="text-primary">You: {scores.X}</span>
