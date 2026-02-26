@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -19,31 +19,99 @@ function getWinner(board: Player[]): { winner: Player; line: number[] } | null {
   return null;
 }
 
+function minimax(board: Player[], isMaximizing: boolean): number {
+  const result = getWinner(board);
+  if (result?.winner === "O") return 10;
+  if (result?.winner === "X") return -10;
+  if (board.every(Boolean)) return 0;
+
+  if (isMaximizing) {
+    let best = -Infinity;
+    for (let i = 0; i < 9; i++) {
+      if (!board[i]) {
+        board[i] = "O";
+        best = Math.max(best, minimax(board, false));
+        board[i] = null;
+      }
+    }
+    return best;
+  } else {
+    let best = Infinity;
+    for (let i = 0; i < 9; i++) {
+      if (!board[i]) {
+        board[i] = "X";
+        best = Math.min(best, minimax(board, true));
+        board[i] = null;
+      }
+    }
+    return best;
+  }
+}
+
+function getBestMove(board: Player[]): number {
+  let bestScore = -Infinity;
+  let bestMove = -1;
+  for (let i = 0; i < 9; i++) {
+    if (!board[i]) {
+      board[i] = "O";
+      const score = minimax(board, false);
+      board[i] = null;
+      if (score > bestScore) {
+        bestScore = score;
+        bestMove = i;
+      }
+    }
+  }
+  return bestMove;
+}
+
 const Index = () => {
   const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
   const [isXNext, setIsXNext] = useState(true);
   const [scores, setScores] = useState({ X: 0, O: 0 });
+  const [thinking, setThinking] = useState(false);
 
   const result = getWinner(board);
   const isDraw = !result && board.every(Boolean);
-  const currentPlayer = isXNext ? "X" : "O";
+
+  useEffect(() => {
+    if (!isXNext && !result && !isDraw) {
+      setThinking(true);
+      const timer = setTimeout(() => {
+        const move = getBestMove([...board]);
+        if (move !== -1) {
+          const next = [...board];
+          next[move] = "O";
+          setBoard(next);
+          const newResult = getWinner(next);
+          if (newResult) {
+            setScores((s) => ({ ...s, O: s.O + 1 }));
+          }
+          setIsXNext(true);
+        }
+        setThinking(false);
+      }, 400);
+      return () => clearTimeout(timer);
+    }
+  }, [isXNext, board, result, isDraw]);
 
   const handleClick = useCallback((i: number) => {
-    if (board[i] || result) return;
+    if (board[i] || result || !isXNext || thinking) return;
     const next = [...board];
-    next[i] = currentPlayer;
+    next[i] = "X";
     setBoard(next);
 
     const newResult = getWinner(next);
     if (newResult) {
-      setScores((s) => ({ ...s, [newResult.winner!]: s[newResult.winner as "X" | "O"] + 1 }));
+      setScores((s) => ({ ...s, X: s.X + 1 }));
     }
-    setIsXNext(!isXNext);
-  }, [board, currentPlayer, isXNext, result]);
+    setIsXNext(false);
+  }, [board, isXNext, result, thinking]);
 
   const reset = () => {
     setBoard(Array(9).fill(null));
     setIsXNext(true);
+    setThinking(false);
   };
 
   return (
@@ -53,24 +121,23 @@ const Index = () => {
           Tic Tac Toe
         </h1>
 
-        {/* Scoreboard */}
         <div className="flex gap-6 text-lg font-bold">
-          <span className="text-primary">X: {scores.X}</span>
-          <span className="text-secondary">O: {scores.O}</span>
+          <span className="text-primary">You: {scores.X}</span>
+          <span className="text-secondary">AI: {scores.O}</span>
         </div>
 
-        {/* Status */}
         <p className="text-lg font-semibold text-muted-foreground h-7">
           {result
             ? <span className={result.winner === "X" ? "text-primary" : "text-secondary"}>
-                {result.winner} wins! 🎉
+                {result.winner === "X" ? "You win! 🎉" : "AI wins! 🤖"}
               </span>
             : isDraw
             ? "It's a draw!"
-            : <>Turn: <span className={isXNext ? "text-primary" : "text-secondary"}>{currentPlayer}</span></>}
+            : thinking
+            ? "AI is thinking..."
+            : <span className="text-primary">Your turn</span>}
         </p>
 
-        {/* Board */}
         <Card className="p-3 shadow-lg">
           <div className="grid grid-cols-3 gap-2">
             {board.map((cell, i) => {
