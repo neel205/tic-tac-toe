@@ -65,25 +65,35 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        "pop-in": {
+          "0%": { transform: "scale(0)", opacity: "0" },
+          "60%": { transform: "scale(1.2)" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        "win-bounce": {
+          "0%, 100%": { transform: "scale(1)" },
+          "25%": { transform: "scale(1.25)" },
+          "50%": { transform: "scale(0.95)" },
+          "75%": { transform: "scale(1.15)" },
+        },
+        "win-glow": {
+          "0%, 100%": { boxShadow: "0 0 0px hsl(var(--primary) / 0)" },
+          "50%": { boxShadow: "0 0 20px hsl(var(--primary) / 0.5)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pop-in": "pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "win-bounce": "win-bounce 0.6s ease-in-out",
+        "win-glow": "win-glow 1s ease-in-out infinite",
       },
     },
   },
