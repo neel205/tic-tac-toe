@@ -1,6 +1,7 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { playPlaceX, playPlaceO, playWin, playDraw } from "@/hooks/useSoundEffects";
 
 type Player = "X" | "O" | null;
 type Difficulty = "easy" | "medium" | "hard";
@@ -87,7 +88,11 @@ const Index = () => {
           next[move] = "O";
           setBoard(next);
           setLastPlaced(move);
-          if (getWinner(next)) setScores((s) => ({ ...s, O: s.O + 1 }));
+          playPlaceO();
+          const w = getWinner(next);
+          if (w) { setScores((s) => ({ ...s, O: s.O + 1 })); playWin(); }
+          else if (next.every(Boolean)) playDraw();
+          setIsXNext(true);
           setIsXNext(true);
         }
         setThinking(false);
@@ -104,9 +109,11 @@ const Index = () => {
     next[i] = currentPlayer;
     setBoard(next);
     setLastPlaced(i);
+    if (currentPlayer === "X") playPlaceX(); else playPlaceO();
 
     const newResult = getWinner(next);
-    if (newResult) setScores((s) => ({ ...s, [currentPlayer]: s[currentPlayer as "X" | "O"] + 1 }));
+    if (newResult) { setScores((s) => ({ ...s, [currentPlayer]: s[currentPlayer as "X" | "O"] + 1 })); playWin(); }
+    else if (next.every(Boolean)) playDraw();
     setIsXNext(!isXNext);
   }, [board, isXNext, result, thinking, mode, currentPlayer]);
 
