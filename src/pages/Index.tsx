@@ -150,10 +150,10 @@ const Index = () => {
         `
       }}
     >
-      <div className="flex flex-col items-center gap-5">
+      <div className="flex flex-col items-center gap-4 sm:gap-5 w-full max-w-md">
         {/* Title */}
         <h1
-          className="text-5xl tracking-tight text-foreground"
+          className="text-3xl sm:text-5xl tracking-tight text-foreground"
           style={{ fontFamily: "'Permanent Marker', cursive" }}
         >
           Tic Tac Toe
@@ -163,7 +163,7 @@ const Index = () => {
         <div className="flex gap-2">
           {([["ai", "vs Computer"], ["local", "2 Players"]] as [Mode, string][]).map(([m, label]) => (
             <button key={m} onClick={() => changeMode(m)}
-              className={`px-4 py-2 rounded text-sm font-bold transition-all border-2 ${mode === m
+              className={`px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-bold transition-all border-2 ${mode === m
                 ? "bg-primary text-primary-foreground border-primary shadow-md"
                 : "bg-background text-muted-foreground border-border hover:border-primary/50 cursor-pointer"}`}>
               {label}
@@ -186,14 +186,14 @@ const Index = () => {
         )}
 
         {/* Scores */}
-        <div className="flex gap-8 text-xl font-bold">
+        <div className="flex gap-6 sm:gap-8 text-lg sm:text-xl font-bold">
           <span className="text-primary">{mode === "ai" ? "You" : "X"}: {scores.X}</span>
           <span className="text-muted-foreground">—</span>
           <span className="text-secondary">{mode === "ai" ? "CPU" : "O"}: {scores.O}</span>
         </div>
 
         {/* Status */}
-        <p className="text-lg font-bold h-7" style={{ fontFamily: "'Permanent Marker', cursive" }}>
+        <p className="text-base sm:text-lg font-bold h-7" style={{ fontFamily: "'Permanent Marker', cursive" }}>
           {result ? (
             <span className={result.winner === "X" ? "text-primary" : "text-secondary"}>{statusText()}</span>
           ) : (
@@ -212,7 +212,7 @@ const Index = () => {
               const col = i % 3;
               return (
                 <button key={i} onClick={() => handleClick(i)}
-                  className={`w-28 h-28 text-5xl font-black transition-all duration-150 flex items-center justify-center
+                  className={`w-[clamp(5rem,25vw,7rem)] h-[clamp(5rem,25vw,7rem)] text-3xl sm:text-5xl font-black transition-all duration-150 flex items-center justify-center
                     ${!cell ? "hover:bg-accent/30 cursor-pointer" : ""}
                     ${isWinCell ? "animate-win-bounce" : ""}
                   `}
