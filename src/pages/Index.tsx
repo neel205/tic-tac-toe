@@ -65,6 +65,16 @@ function getAIMove(board: Player[], difficulty: Difficulty): number {
 
 const DIFFICULTY_LABELS: Record<Difficulty, string> = { easy: "🟢 Easy", medium: "🟡 Medium", hard: "🔴 Hard" };
 
+function fireConfetti() {
+  const end = Date.now() + 600;
+  const fire = () => {
+    confetti({ particleCount: 30, angle: 60, spread: 55, origin: { x: 0, y: 0.7 } });
+    confetti({ particleCount: 30, angle: 120, spread: 55, origin: { x: 1, y: 0.7 } });
+    if (Date.now() < end) requestAnimationFrame(fire);
+  };
+  fire();
+}
+
 const Index = () => {
   const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
   const [isXNext, setIsXNext] = useState(true);
