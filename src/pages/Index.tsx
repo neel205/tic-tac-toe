@@ -186,7 +186,7 @@ const Index = () => {
         )}
 
         {/* Scores */}
-        <div className="flex gap-8 text-xl font-bold">
+        <div className="flex gap-6 sm:gap-8 text-lg sm:text-xl font-bold">
           <span className="text-primary">{mode === "ai" ? "You" : "X"}: {scores.X}</span>
           <span className="text-muted-foreground">—</span>
           <span className="text-secondary">{mode === "ai" ? "CPU" : "O"}: {scores.O}</span>
