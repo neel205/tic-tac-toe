@@ -101,7 +101,7 @@ const Index = () => {
           setLastPlaced(move);
           playPlaceO();
           const w = getWinner(next);
-          if (w) { setScores((s) => ({ ...s, O: s.O + 1 })); playWin(); }
+          if (w) { setScores((s) => ({ ...s, O: s.O + 1 })); playWin(); fireConfetti(); }
           else if (next.every(Boolean)) playDraw();
           setIsXNext(true);
           setIsXNext(true);
