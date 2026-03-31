@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { playPlaceX, playPlaceO, playWin, playDraw } from "@/hooks/useSoundEffects";
 import confetti from "canvas-confetti";
 
@@ -63,7 +62,7 @@ function getAIMove(board: Player[], difficulty: Difficulty): number {
   return getBestMove([...board]);
 }
 
-const DIFFICULTY_LABELS: Record<Difficulty, string> = { easy: "🟢 Easy", medium: "🟡 Medium", hard: "🔴 Hard" };
+const DIFFICULTY_LABELS: Record<Difficulty, string> = { easy: "Easy", medium: "Medium", hard: "Hard" };
 
 function fireConfetti() {
   const end = Date.now() + 600;
@@ -82,7 +81,6 @@ const Index = () => {
   const [thinking, setThinking] = useState(false);
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");
   const [mode, setMode] = useState<Mode>("ai");
-  // Track which cells were just placed for animation
   const [lastPlaced, setLastPlaced] = useState<number | null>(null);
 
   const result = getWinner(board);
@@ -134,8 +132,8 @@ const Index = () => {
 
   const statusText = () => {
     if (result) {
-      if (mode === "ai") return result.winner === "X" ? "You win! 🎉" : "AI wins! 🤖";
-      return `${result.winner} wins! 🎉`;
+      if (mode === "ai") return result.winner === "X" ? "You win!" : "AI wins!";
+      return `${result.winner} wins!`;
     }
     if (isDraw) return "It's a draw!";
     if (mode === "ai") return thinking ? "AI is thinking..." : "Your turn";
@@ -143,57 +141,89 @@ const Index = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <div className="flex flex-col items-center gap-6">
-        <h1 className="text-4xl font-black tracking-tight text-foreground">Tic Tac Toe</h1>
+    <div className="flex min-h-screen items-center justify-center bg-background p-4"
+      style={{
+        backgroundImage: `
+          radial-gradient(circle at 20% 80%, hsl(var(--accent) / 0.15) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, hsl(var(--primary) / 0.08) 0%, transparent 50%),
+          url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")
+        `
+      }}
+    >
+      <div className="flex flex-col items-center gap-5">
+        {/* Title */}
+        <h1
+          className="text-5xl tracking-tight text-foreground"
+          style={{ fontFamily: "'Permanent Marker', cursive" }}
+        >
+          Tic Tac Toe
+        </h1>
 
+        {/* Mode selector */}
         <div className="flex gap-2">
-          {([["ai", "🤖 vs AI"], ["local", "👥 2 Players"]] as [Mode, string][]).map(([m, label]) => (
+          {([["ai", "vs Computer"], ["local", "2 Players"]] as [Mode, string][]).map(([m, label]) => (
             <button key={m} onClick={() => changeMode(m)}
-              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${mode === m ? "bg-primary text-primary-foreground shadow-md scale-105" : "bg-muted text-muted-foreground hover:bg-accent cursor-pointer"}`}>
+              className={`px-4 py-2 rounded text-sm font-bold transition-all border-2 ${mode === m
+                ? "bg-primary text-primary-foreground border-primary shadow-md"
+                : "bg-background text-muted-foreground border-border hover:border-primary/50 cursor-pointer"}`}>
               {label}
             </button>
           ))}
         </div>
 
+        {/* Difficulty */}
         {mode === "ai" && (
           <div className="flex gap-2">
             {(["easy", "medium", "hard"] as Difficulty[]).map((d) => (
               <button key={d} onClick={() => changeDifficulty(d)}
-                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${difficulty === d ? "bg-primary text-primary-foreground shadow-md scale-105" : "bg-muted text-muted-foreground hover:bg-accent cursor-pointer"}`}>
+                className={`px-3 py-1.5 rounded text-sm font-bold transition-all border-2 ${difficulty === d
+                  ? "bg-primary text-primary-foreground border-primary shadow-md"
+                  : "bg-background text-muted-foreground border-border hover:border-primary/50 cursor-pointer"}`}>
                 {DIFFICULTY_LABELS[d]}
               </button>
             ))}
           </div>
         )}
 
-        <div className="flex gap-6 text-lg font-bold">
+        {/* Scores */}
+        <div className="flex gap-8 text-xl font-bold">
           <span className="text-primary">{mode === "ai" ? "You" : "X"}: {scores.X}</span>
-          <span className="text-secondary">{mode === "ai" ? "AI" : "O"}: {scores.O}</span>
+          <span className="text-muted-foreground">—</span>
+          <span className="text-secondary">{mode === "ai" ? "CPU" : "O"}: {scores.O}</span>
         </div>
 
-        <p className="text-lg font-semibold text-muted-foreground h-7">
+        {/* Status */}
+        <p className="text-lg font-bold h-7" style={{ fontFamily: "'Permanent Marker', cursive" }}>
           {result ? (
             <span className={result.winner === "X" ? "text-primary" : "text-secondary"}>{statusText()}</span>
           ) : (
-            <span className={isDraw ? "" : isXNext ? "text-primary" : "text-secondary"}>{statusText()}</span>
+            <span className={isDraw ? "text-muted-foreground" : isXNext ? "text-primary" : "text-secondary"}>{statusText()}</span>
           )}
         </p>
 
-        <Card className="p-3 shadow-lg">
-          <div className="grid grid-cols-3 gap-2">
+        {/* Board */}
+        <div className="relative p-2">
+          {/* Chalk-style grid using borders */}
+          <div className="grid grid-cols-3" style={{ gap: 0 }}>
             {board.map((cell, i) => {
               const isWinCell = result?.line.includes(i);
               const justPlaced = lastPlaced === i;
+              const row = Math.floor(i / 3);
+              const col = i % 3;
               return (
                 <button key={i} onClick={() => handleClick(i)}
-                  className={`w-24 h-24 rounded-lg text-4xl font-black transition-all duration-150 flex items-center justify-center
-                    ${cell ? "" : "hover:bg-muted cursor-pointer"}
-                    ${!cell ? "bg-background border-2 border-border" : ""}
-                    ${cell === "X" ? "text-primary bg-primary/10 border-2 border-primary/30" : ""}
-                    ${cell === "O" ? "text-secondary bg-secondary/10 border-2 border-secondary/30" : ""}
-                    ${isWinCell ? "animate-win-bounce animate-win-glow" : ""}
-                  `}>
+                  className={`w-28 h-28 text-5xl font-black transition-all duration-150 flex items-center justify-center
+                    ${!cell ? "hover:bg-accent/30 cursor-pointer" : ""}
+                    ${isWinCell ? "animate-win-bounce" : ""}
+                  `}
+                  style={{
+                    fontFamily: "'Permanent Marker', cursive",
+                    borderRight: col < 2 ? "3px solid hsl(var(--border))" : "none",
+                    borderBottom: row < 2 ? "3px solid hsl(var(--border))" : "none",
+                    color: cell === "X" ? "hsl(var(--primary))" : cell === "O" ? "hsl(var(--secondary))" : undefined,
+                    backgroundColor: isWinCell ? "hsl(var(--accent) / 0.25)" : undefined,
+                  }}
+                >
                   {cell && (
                     <span key={`${i}-${cell}`} className={justPlaced ? "animate-pop-in inline-block" : "inline-block"}>
                       {cell}
@@ -203,10 +233,16 @@ const Index = () => {
               );
             })}
           </div>
-        </Card>
+        </div>
 
+        {/* Play Again */}
         {(result || isDraw) && (
-          <Button onClick={resetBoard} size="lg" className="font-bold text-base animate-pop-in">Play Again</Button>
+          <Button onClick={resetBoard} size="lg"
+            className="font-bold text-base animate-pop-in rounded border-2 border-primary"
+            style={{ fontFamily: "'Permanent Marker', cursive" }}
+          >
+            Play Again
+          </Button>
         )}
       </div>
     </div>
