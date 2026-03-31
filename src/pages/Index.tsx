@@ -123,7 +123,7 @@ const Index = () => {
     if (currentPlayer === "X") playPlaceX(); else playPlaceO();
 
     const newResult = getWinner(next);
-    if (newResult) { setScores((s) => ({ ...s, [currentPlayer]: s[currentPlayer as "X" | "O"] + 1 })); playWin(); }
+    if (newResult) { setScores((s) => ({ ...s, [currentPlayer]: s[currentPlayer as "X" | "O"] + 1 })); playWin(); fireConfetti(); }
     else if (next.every(Boolean)) playDraw();
     setIsXNext(!isXNext);
   }, [board, isXNext, result, thinking, mode, currentPlayer]);
