@@ -212,7 +212,7 @@ const Index = () => {
               const col = i % 3;
               return (
                 <button key={i} onClick={() => handleClick(i)}
-                  className={`w-28 h-28 text-5xl font-black transition-all duration-150 flex items-center justify-center
+                  className={`w-[clamp(5rem,25vw,7rem)] h-[clamp(5rem,25vw,7rem)] text-3xl sm:text-5xl font-black transition-all duration-150 flex items-center justify-center
                     ${!cell ? "hover:bg-accent/30 cursor-pointer" : ""}
                     ${isWinCell ? "animate-win-bounce" : ""}
                   `}
