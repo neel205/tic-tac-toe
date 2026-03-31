@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { playPlaceX, playPlaceO, playWin, playDraw } from "@/hooks/useSoundEffects";
+import confetti from "canvas-confetti";
 
 type Player = "X" | "O" | null;
 type Difficulty = "easy" | "medium" | "hard";
@@ -64,6 +65,16 @@ function getAIMove(board: Player[], difficulty: Difficulty): number {
 
 const DIFFICULTY_LABELS: Record<Difficulty, string> = { easy: "🟢 Easy", medium: "🟡 Medium", hard: "🔴 Hard" };
 
+function fireConfetti() {
+  const end = Date.now() + 600;
+  const fire = () => {
+    confetti({ particleCount: 30, angle: 60, spread: 55, origin: { x: 0, y: 0.7 } });
+    confetti({ particleCount: 30, angle: 120, spread: 55, origin: { x: 1, y: 0.7 } });
+    if (Date.now() < end) requestAnimationFrame(fire);
+  };
+  fire();
+}
+
 const Index = () => {
   const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
   const [isXNext, setIsXNext] = useState(true);
@@ -90,7 +101,7 @@ const Index = () => {
           setLastPlaced(move);
           playPlaceO();
           const w = getWinner(next);
-          if (w) { setScores((s) => ({ ...s, O: s.O + 1 })); playWin(); }
+          if (w) { setScores((s) => ({ ...s, O: s.O + 1 })); playWin(); fireConfetti(); }
           else if (next.every(Boolean)) playDraw();
           setIsXNext(true);
           setIsXNext(true);
@@ -112,7 +123,7 @@ const Index = () => {
     if (currentPlayer === "X") playPlaceX(); else playPlaceO();
 
     const newResult = getWinner(next);
-    if (newResult) { setScores((s) => ({ ...s, [currentPlayer]: s[currentPlayer as "X" | "O"] + 1 })); playWin(); }
+    if (newResult) { setScores((s) => ({ ...s, [currentPlayer]: s[currentPlayer as "X" | "O"] + 1 })); playWin(); fireConfetti(); }
     else if (next.every(Boolean)) playDraw();
     setIsXNext(!isXNext);
   }, [board, isXNext, result, thinking, mode, currentPlayer]);
