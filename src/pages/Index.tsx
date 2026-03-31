@@ -160,7 +160,7 @@ const Index = () => {
         {/* Theme toggle */}
         <button
           onClick={() => setDark(!dark)}
-          className="absolute top-0 right-0 p-2 rounded border-2 border-border bg-background text-foreground hover:bg-accent/40 transition-colors cursor-pointer"
+          className="absolute top-0 right-0 p-2 rounded-lg border-2 border-border bg-background text-foreground hover:bg-accent/40 transition-colors cursor-pointer"
           aria-label="Toggle theme"
         >
           {dark ? <Sun size={20} /> : <Moon size={20} />}
@@ -177,7 +177,7 @@ const Index = () => {
         <div className="flex gap-2">
           {([["ai", "vs Computer"], ["local", "2 Players"]] as [Mode, string][]).map(([m, label]) => (
             <button key={m} onClick={() => changeMode(m)}
-              className={`px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-bold transition-all border-2 ${mode === m
+              className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all border-2 ${mode === m
                 ? "bg-primary text-primary-foreground border-primary shadow-md"
                 : "bg-background text-muted-foreground border-border hover:border-primary/50 cursor-pointer"}`}>
               {label}
@@ -190,7 +190,7 @@ const Index = () => {
           <div className="flex gap-2">
             {(["easy", "medium", "hard"] as Difficulty[]).map((d) => (
               <button key={d} onClick={() => changeDifficulty(d)}
-                className={`px-3 py-1.5 rounded text-sm font-bold transition-all border-2 ${difficulty === d
+                className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all border-2 ${difficulty === d
                   ? "bg-primary text-primary-foreground border-primary shadow-md"
                   : "bg-background text-muted-foreground border-border hover:border-primary/50 cursor-pointer"}`}>
                 {DIFFICULTY_LABELS[d]}
@@ -252,7 +252,7 @@ const Index = () => {
         {/* Play Again */}
         {(result || isDraw) && (
           <Button onClick={resetBoard} size="lg"
-            className="font-bold text-base animate-pop-in rounded border-2 border-primary"
+            className="font-bold text-base animate-pop-in rounded-lg border-2 border-primary"
             style={{ fontFamily: "'Permanent Marker', cursive" }}
           >
             Play Again
