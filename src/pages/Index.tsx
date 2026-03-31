@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { playPlaceX, playPlaceO, playWin, playDraw } from "@/hooks/useSoundEffects";
+import confetti from "canvas-confetti";
 
 type Player = "X" | "O" | null;
 type Difficulty = "easy" | "medium" | "hard";
