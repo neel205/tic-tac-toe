@@ -193,7 +193,7 @@ const Index = () => {
         </div>
 
         {/* Status */}
-        <p className="text-lg font-bold h-7" style={{ fontFamily: "'Permanent Marker', cursive" }}>
+        <p className="text-base sm:text-lg font-bold h-7" style={{ fontFamily: "'Permanent Marker', cursive" }}>
           {result ? (
             <span className={result.winner === "X" ? "text-primary" : "text-secondary"}>{statusText()}</span>
           ) : (
