@@ -163,7 +163,7 @@ const Index = () => {
         <div className="flex gap-2">
           {([["ai", "vs Computer"], ["local", "2 Players"]] as [Mode, string][]).map(([m, label]) => (
             <button key={m} onClick={() => changeMode(m)}
-              className={`px-4 py-2 rounded text-sm font-bold transition-all border-2 ${mode === m
+              className={`px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-bold transition-all border-2 ${mode === m
                 ? "bg-primary text-primary-foreground border-primary shadow-md"
                 : "bg-background text-muted-foreground border-border hover:border-primary/50 cursor-pointer"}`}>
               {label}
