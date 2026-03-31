@@ -150,10 +150,10 @@ const Index = () => {
         `
       }}
     >
-      <div className="flex flex-col items-center gap-5">
+      <div className="flex flex-col items-center gap-4 sm:gap-5 w-full max-w-md">
         {/* Title */}
         <h1
-          className="text-5xl tracking-tight text-foreground"
+          className="text-3xl sm:text-5xl tracking-tight text-foreground"
           style={{ fontFamily: "'Permanent Marker', cursive" }}
         >
           Tic Tac Toe
