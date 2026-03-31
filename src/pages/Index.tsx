@@ -83,6 +83,11 @@ const Index = () => {
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");
   const [mode, setMode] = useState<Mode>("ai");
   const [lastPlaced, setLastPlaced] = useState<number | null>(null);
+  const [dark, setDark] = useState(() => document.documentElement.classList.contains("dark"));
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+  }, [dark]);
 
   const result = getWinner(board);
   const isDraw = !result && board.every(Boolean);
