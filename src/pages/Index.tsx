@@ -221,13 +221,13 @@ const Index = () => {
             {/* Hand-drawn grid lines */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 300 300" preserveAspectRatio="none">
               {/* Vertical line 1 */}
-              <path d="M 100 8 Q 98 75, 101 150 Q 103 225, 99 292" stroke="black" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              <path d="M 100 8 Q 98 75, 101 150 Q 103 225, 99 292" stroke="black" strokeWidth="5" fill="none" strokeLinecap="round" />
               {/* Vertical line 2 */}
-              <path d="M 200 6 Q 202 80, 199 155 Q 197 230, 201 294" stroke="black" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              <path d="M 200 6 Q 202 80, 199 155 Q 197 230, 201 294" stroke="black" strokeWidth="5" fill="none" strokeLinecap="round" />
               {/* Horizontal line 1 */}
-              <path d="M 8 100 Q 75 98, 150 101 Q 225 103, 292 99" stroke="black" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              <path d="M 8 100 Q 75 98, 150 101 Q 225 103, 292 99" stroke="black" strokeWidth="5" fill="none" strokeLinecap="round" />
               {/* Horizontal line 2 */}
-              <path d="M 6 200 Q 80 202, 155 199 Q 230 197, 294 201" stroke="black" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              <path d="M 6 200 Q 80 202, 155 199 Q 230 197, 294 201" stroke="black" strokeWidth="5" fill="none" strokeLinecap="round" />
             </svg>
             {/* Cells */}
             <div className="grid grid-cols-3 relative z-10" style={{ gap: 0 }}>
