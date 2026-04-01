@@ -77,6 +77,7 @@ function fireConfetti() {
 }
 
 const Index = () => {
+  const navigate = useNavigate();
   const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
   const [isXNext, setIsXNext] = useState(true);
   const [scores, setScores] = useState({ X: 0, O: 0 });
