@@ -87,6 +87,10 @@ export default {
           "0%, 100%": { boxShadow: "0 0 0px hsl(var(--primary) / 0)" },
           "50%": { boxShadow: "0 0 20px hsl(var(--primary) / 0.5)" },
         },
+        "strike-through": {
+          "0%": { strokeDashoffset: "400" },
+          "100%": { strokeDashoffset: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -94,6 +98,7 @@ export default {
         "pop-in": "pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
         "win-bounce": "win-bounce 0.6s ease-in-out",
         "win-glow": "win-glow 1s ease-in-out infinite",
+        "strike-through": "strike-through 0.4s ease-out forwards",
       },
     },
   },
