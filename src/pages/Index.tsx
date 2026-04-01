@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { Sun, Moon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Sun, Moon, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { playPlaceX, playPlaceO, playWin, playDraw } from "@/hooks/useSoundEffects";
 import confetti from "canvas-confetti";
