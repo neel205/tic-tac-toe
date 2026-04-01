@@ -220,14 +220,24 @@ const Index = () => {
           <div className="relative" style={{ width: "calc(3 * clamp(5rem,25vw,7rem))", height: "calc(3 * clamp(5rem,25vw,7rem))" }}>
             {/* Hand-drawn grid lines */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 300 300" preserveAspectRatio="none">
-              {/* Vertical line 1 */}
               <path d="M 100 8 Q 98 75, 101 150 Q 103 225, 99 292" stroke="black" strokeWidth="5" fill="none" strokeLinecap="round" />
-              {/* Vertical line 2 */}
               <path d="M 200 6 Q 202 80, 199 155 Q 197 230, 201 294" stroke="black" strokeWidth="5" fill="none" strokeLinecap="round" />
-              {/* Horizontal line 1 */}
               <path d="M 8 100 Q 75 98, 150 101 Q 225 103, 292 99" stroke="black" strokeWidth="5" fill="none" strokeLinecap="round" />
-              {/* Horizontal line 2 */}
               <path d="M 6 200 Q 80 202, 155 199 Q 230 197, 294 201" stroke="black" strokeWidth="5" fill="none" strokeLinecap="round" />
+              {/* Winning strike-through line */}
+              {result && (
+                <line
+                  x1={((result.line[0] % 3) * 100) + 50}
+                  y1={(Math.floor(result.line[0] / 3) * 100) + 50}
+                  x2={((result.line[2] % 3) * 100) + 50}
+                  y2={(Math.floor(result.line[2] / 3) * 100) + 50}
+                  stroke={result.winner === "X" ? "hsl(var(--primary))" : "hsl(var(--secondary))"}
+                  strokeWidth="6"
+                  strokeLinecap="round"
+                  strokeDasharray="400"
+                  className="animate-strike-through"
+                />
+              )}
             </svg>
             {/* Cells */}
             <div className="grid grid-cols-3 relative z-10" style={{ gap: 0 }}>
