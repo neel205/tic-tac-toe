@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { Sun, Moon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Sun, Moon, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { playPlaceX, playPlaceO, playWin, playDraw } from "@/hooks/useSoundEffects";
 import confetti from "canvas-confetti";
@@ -76,6 +77,7 @@ function fireConfetti() {
 }
 
 const Index = () => {
+  const navigate = useNavigate();
   const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
   const [isXNext, setIsXNext] = useState(true);
   const [scores, setScores] = useState({ X: 0, O: 0 });
@@ -157,14 +159,24 @@ const Index = () => {
       }}
     >
       <div className="flex flex-col items-center gap-4 sm:gap-5 w-full max-w-md relative">
-        {/* Theme toggle */}
-        <button
-          onClick={() => setDark(!dark)}
-          className="absolute top-0 right-0 p-2 rounded-lg border-2 border-border bg-background text-foreground hover:bg-accent/40 transition-colors cursor-pointer"
-          aria-label="Toggle theme"
-        >
-          {dark ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
+        {/* Navigation */}
+        <div className="flex w-full justify-between items-center">
+          <button
+            onClick={() => navigate("/")}
+            className="p-2 rounded-lg border-2 border-border bg-background text-foreground hover:bg-accent/40 transition-colors cursor-pointer"
+            aria-label="Back to home"
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <div />
+          <button
+            onClick={() => setDark(!dark)}
+            className="p-2 rounded-lg border-2 border-border bg-background text-foreground hover:bg-accent/40 transition-colors cursor-pointer"
+            aria-label="Toggle theme"
+          >
+            {dark ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+        </div>
         {/* Title */}
         <h1
           className="text-3xl sm:text-5xl tracking-tight text-foreground"
