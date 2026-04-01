@@ -217,35 +217,44 @@ const Index = () => {
 
         {/* Board */}
         <div className="relative p-2">
-          {/* Chalk-style grid using borders */}
-          <div className="grid grid-cols-3" style={{ gap: 0 }}>
-            {board.map((cell, i) => {
-              const isWinCell = result?.line.includes(i);
-              const justPlaced = lastPlaced === i;
-              const row = Math.floor(i / 3);
-              const col = i % 3;
-              return (
-                <button key={i} onClick={() => handleClick(i)}
-                  className={`w-[clamp(5rem,25vw,7rem)] h-[clamp(5rem,25vw,7rem)] text-3xl sm:text-5xl font-black transition-all duration-150 flex items-center justify-center
-                    ${!cell ? "hover:bg-accent/30 cursor-pointer" : ""}
-                    ${isWinCell ? "animate-win-bounce" : ""}
-                  `}
-                  style={{
-                    fontFamily: "'Permanent Marker', cursive",
-                    borderRight: col < 2 ? "3px solid hsl(var(--border))" : "none",
-                    borderBottom: row < 2 ? "3px solid hsl(var(--border))" : "none",
-                    color: cell === "X" ? "hsl(var(--primary))" : cell === "O" ? "hsl(var(--secondary))" : undefined,
-                    backgroundColor: isWinCell ? "hsl(var(--accent) / 0.25)" : undefined,
-                  }}
-                >
-                  {cell && (
-                    <span key={`${i}-${cell}`} className={justPlaced ? "animate-pop-in inline-block" : "inline-block"}>
-                      {cell}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
+          <div className="relative" style={{ width: "calc(3 * clamp(5rem,25vw,7rem))", height: "calc(3 * clamp(5rem,25vw,7rem))" }}>
+            {/* Hand-drawn grid lines */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 300 300" preserveAspectRatio="none">
+              {/* Vertical line 1 */}
+              <path d="M 100 8 Q 98 75, 101 150 Q 103 225, 99 292" stroke="black" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              {/* Vertical line 2 */}
+              <path d="M 200 6 Q 202 80, 199 155 Q 197 230, 201 294" stroke="black" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              {/* Horizontal line 1 */}
+              <path d="M 8 100 Q 75 98, 150 101 Q 225 103, 292 99" stroke="black" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              {/* Horizontal line 2 */}
+              <path d="M 6 200 Q 80 202, 155 199 Q 230 197, 294 201" stroke="black" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            </svg>
+            {/* Cells */}
+            <div className="grid grid-cols-3 relative z-10" style={{ gap: 0 }}>
+              {board.map((cell, i) => {
+                const isWinCell = result?.line.includes(i);
+                const justPlaced = lastPlaced === i;
+                return (
+                  <button key={i} onClick={() => handleClick(i)}
+                    className={`w-[clamp(5rem,25vw,7rem)] h-[clamp(5rem,25vw,7rem)] text-3xl sm:text-5xl font-black transition-all duration-150 flex items-center justify-center
+                      ${!cell ? "hover:bg-accent/30 cursor-pointer" : ""}
+                      ${isWinCell ? "animate-win-bounce" : ""}
+                    `}
+                    style={{
+                      fontFamily: "'Permanent Marker', cursive",
+                      color: cell === "X" ? "hsl(var(--primary))" : cell === "O" ? "hsl(var(--secondary))" : undefined,
+                      backgroundColor: isWinCell ? "hsl(var(--accent) / 0.25)" : undefined,
+                    }}
+                  >
+                    {cell && (
+                      <span key={`${i}-${cell}`} className={justPlaced ? "animate-pop-in inline-block" : "inline-block"}>
+                        {cell}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
