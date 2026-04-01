@@ -249,15 +249,13 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Play Again */}
-        {(result || isDraw) && (
-          <Button onClick={resetBoard} size="lg"
-            className="font-bold text-base animate-pop-in rounded-lg border-2 border-primary"
-            style={{ fontFamily: "'Permanent Marker', cursive" }}
-          >
-            Play Again
-          </Button>
-        )}
+        {/* Reset / Play Again */}
+        <Button onClick={resetBoard} size="lg"
+          className={`font-bold text-base rounded-lg border-2 border-primary ${result || isDraw ? "animate-pop-in" : ""}`}
+          style={{ fontFamily: "'Permanent Marker', cursive" }}
+        >
+          {result || isDraw ? "Play Again" : "Reset"}
+        </Button>
       </div>
     </div>
   );
